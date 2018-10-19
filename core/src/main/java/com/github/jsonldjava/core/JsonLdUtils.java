@@ -252,16 +252,20 @@ public class JsonLdUtils {
      *            the framed output before compaction
      */
 
+    @SuppressWarnings("unchecked")
     static void pruneBlankNodes(final Object input) {
         final Map<String, Object> toPrune = new HashMap<>();
         fillNodesToPrune(input, toPrune);
         for (final String id : toPrune.keySet()) {
             final Object node = toPrune.get(id);
             if (node == null) {
+                System.out.println(id+"=null");
                 continue;
             }
+//            System.out.println(id+"=not null, going to remove");
             ((Map<String, Object>) node).remove(JsonLdConsts.ID);
         }
+//        System.out.println(input);
     }
 
     /**
@@ -297,9 +301,12 @@ public class JsonLdUtils {
                         // present somewhere else,
                         // so we just null the value
                         if (toPrune.containsKey(id)) {
-                            toPrune.put(id, null);
+//                            System.out.println("300 null:"+ id +" : "+input);
+                            ((Map<String, Object>) input).remove(JsonLdConsts.ID);
+//                            toPrune.put(id, null);
                         } else {
                             // else we add the object as the value
+//                            System.out.println("303:"+ id +" : "+input);
                             toPrune.put(id, input);
                         }
                     }
@@ -316,6 +323,8 @@ public class JsonLdUtils {
                 // in that case,
                 // then we're referencing a blank node id so this id should not
                 // be removed
+                System.out.println("320:"+ p +" : null");
+
                 toPrune.put(p, null);
             }
         }
