@@ -265,7 +265,7 @@ public class Context extends LinkedHashMap<String, Object> {
                 }
                 // jsonld 1.1: 5.8.3 in https://w3c.github.io/json-ld-api/#algorithm
                 else if (value instanceof String) {
-                    if (((String) value).startsWith(JsonLdConsts.BLANK_NODE_PREFIX)
+                    if (JsonLdUtils.isBlankNode((String) value)
                             || JsonLdUtils.isAbsoluteIri((String) value) || JsonLdUtils.isRelativeIri((String) value)) {
                         result.put(JsonLdConsts.VOCAB,
                                 expandIri((String) value, true, true, ((Map<String, Object>) result), null));
@@ -301,6 +301,7 @@ public class Context extends LinkedHashMap<String, Object> {
                         .contains(key)) {
                     continue;
                 }
+                // TODO: passing result for active context and the value of the @protected entry from context, if any
                 result.createTermDefinition((Map<String, Object>) context, key, defined);
             }
         }
